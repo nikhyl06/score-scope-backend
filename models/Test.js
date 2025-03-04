@@ -1,15 +1,19 @@
 const mongoose = require("mongoose");
 
+// Test Schema
 const testSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  category: { type: String, required: true }, // Full-Length, Subject
-  duration: { type: String, required: true }, // e.g., "3 hrs"
+  exam: { type: String, enum: ["jee-mains", "jee-advanced"], required: true },
+  class: { type: String, enum: ["11", "12"], required: true },
+  subject: { type: String, enum: ["physics", "chemistry", "mathematics"] },
+  topic: { type: String },
+  chapter: { type: String },
   questions: [{ type: mongoose.Schema.Types.ObjectId, ref: "Question" }],
-  difficulty: { type: String, enum: ["Easy", "Medium", "Hard"] },
   metadata: {
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
-    tags: [String],
+    marks: { type: Number, default: 0 },
+    timeAllotted: { type: Number, default: 0 },
   },
   status: { type: String, enum: ["active", "draft"], default: "active" },
 });
