@@ -12,7 +12,7 @@ app.use(
   cors({
     origin:
       process.env.NODE_ENV === "production"
-        ? "https://score-scope-frontend.vercel.app/" // Update for production
+        ? "https://score-scope-frontend.vercel.app" // Update for production
         : "http://localhost:5173",
   })
 );
