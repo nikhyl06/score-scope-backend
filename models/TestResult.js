@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 
-
 const testResultSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   testId: { type: mongoose.Schema.Types.ObjectId, ref: "Test", required: true },
@@ -9,6 +8,12 @@ const testResultSchema = new mongoose.Schema({
       questionId: { type: mongoose.Schema.Types.ObjectId, ref: "Question" },
       userAnswer: String,
       isCorrect: Boolean,
+      timeSpent: Number, // in seconds
+      mistakeType: {
+        type: String,
+        enum: ["conceptual", "silly", "notStudied", null],
+        default: null,
+      },
     },
   ],
   score: { type: Number, required: true },
@@ -23,15 +28,33 @@ const testResultSchema = new mongoose.Schema({
   analysis: {
     topicPerformance: [
       {
-        topic: String,
-        correct: Number,
-        total: Number,
+        topic: { type: String, required: true },
+        correct: { type: Number, required: true },
+        total: { type: Number, required: true },
+        accuracy: { type: Number, required: true },
       },
     ],
-    difficulty: { type: String, enum: ["easy", "hard"] }, // Based on exam
-    tips: [String],
+    questionTypePerformance: [
+      {
+        type: { type: String, required: true },
+        correct: { type: Number, required: true },
+        total: { type: Number, required: true },
+        accuracy: { type: Number, required: true },
+      },
+    ],
+    timeManagement: {
+      totalTime: { type: Number, required: true },
+      averageTimePerQuestion: { type: Number, required: true },
+      questionsExceededTime: [{ questionId: String, timeSpent: Number }],
+    },
+    mistakeDistribution: {
+      conceptual: { type: Number, default: 0 },
+      silly: { type: Number, default: 0 },
+      not_studied: { type: Number, default: 0 },
+    },
+    difficulty: { type: String, enum: ["easy", "hard"], required: true },
+    tips: [{ type: String }],
   },
 });
-
 
 module.exports = mongoose.model("TestResult", testResultSchema);

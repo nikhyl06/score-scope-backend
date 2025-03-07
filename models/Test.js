@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 
-// Test Schema
 const testSchema = new mongoose.Schema({
   name: { type: String, required: true },
   exam: { type: String, enum: ["jee-mains", "jee-advanced"], required: true },
@@ -13,7 +12,7 @@ const testSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
     marks: { type: Number, default: 0 },
-    timeAllotted: { type: Number, default: 0 },
+    timeAllotted: { type: Number, default: 0 }, // in milliseconds
   },
   status: { type: String, enum: ["active", "draft"], default: "active" },
 });
