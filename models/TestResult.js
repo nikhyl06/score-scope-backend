@@ -11,7 +11,7 @@ const testResultSchema = new mongoose.Schema({
       timeSpent: Number, // in seconds
       mistakeType: {
         type: String,
-        enum: ["conceptual", "silly", "notStudied", null],
+        enum: ["conceptual", "silly", "not_studied", null],
         default: null,
       },
     },
