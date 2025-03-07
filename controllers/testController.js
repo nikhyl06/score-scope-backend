@@ -64,6 +64,7 @@ const getAllTests = async (req, res) => {
 const getTest = async (req, res) => {
   try {
     const test = await Test.findById(req.params.id).populate("questions");
+    console.log(test)
     if (!test) return res.status(404).json({ message: "Test not found" });
     res.json(test);
   } catch (error) {
