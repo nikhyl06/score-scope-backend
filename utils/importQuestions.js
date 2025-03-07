@@ -2,21 +2,18 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const Question = require("../models/Question"); // Adjust path to your model file
 
-const finalExam = "jee-main"
+const finalExam = "jee-mains"
 const finalSubject = "physics"
-const finalChapter = "electrostatics";
+const finalChapter = "motion-in-a-plane";
 const finalClass = "11"
-const finalTopic = "electricity";
+const finalTopic = "mechanics";
 
 dotenv.config();
 
 // MongoDB connection
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(process.env.MONGO_URI);
     console.log("MongoDB connected");
   } catch (error) {
     console.error("MongoDB connection error:", error);
@@ -45,60 +42,6 @@ const htmlToMarkdown = (html) => {
       }](https://static.vecteezy.com/system/resources/thumbnails/008/695/917/small_2x/no-image-available-icon-simple-two-colors-template-for-no-image-or-picture-coming-soon-and-placeholder-illustration-isolated-on-white-background-vector.jpg)\n`
   );
 
-  // Handle tables with extra spacing
-  if (markdown.includes("<table")) {
-    let tableMarkdown = "";
-    const tableMatch = markdown.match(/<table[^>]*>([\s\S]*?)<\/table>/);
-    if (tableMatch) {
-      const tableContent = tableMatch[1];
-
-      // Extract thead and tbody
-      const theadMatch = tableContent.match(/<thead>([\s\S]*?)<\/thead>/);
-      const tbodyMatch = tableContent.match(/<tbody>([\s\S]*?)<\/tbody>/);
-
-      let headers = [];
-      let rows = [];
-
-      // Parse headers from thead
-      if (theadMatch) {
-        const headRows = theadMatch[1].match(/<tr>([\s\S]*?)<\/tr>/g) || [];
-        headRows.forEach((row) => {
-          const cells = row.match(/<th[^>]*>([\s\S]*?)<\/th>/g) || [];
-          headers = cells.map((cell) =>
-            cell.replace(/<th[^>]*>([\s\S]*?)<\/th>/, "$1").trim()
-          );
-        });
-      }
-
-      // Parse rows from tbody
-      if (tbodyMatch) {
-        const bodyRows = tbodyMatch[1].match(/<tr>([\s\S]*?)<\/tr>/g) || [];
-        rows = bodyRows.map((row) => {
-          const cells = row.match(/<td[^>]*>([\s\S]*?)<\/td>/g) || [];
-          return cells.map((cell) =>
-            cell.replace(/<td[^>]*>([\s\S]*?)<\/td>/, "$1").trim()
-          );
-        });
-      }
-
-      // Build Markdown table with extra spacing
-      if (headers.length > 0) {
-        tableMarkdown += "\n\n"; // Extra spacing before table
-        tableMarkdown += "| " + headers.join(" | ") + " |\n";
-        tableMarkdown += "| " + headers.map(() => "---").join(" | ") + " |\n";
-        rows.forEach((row) => {
-          tableMarkdown += "| " + row.join(" | ") + " |\n";
-        });
-        tableMarkdown += "\n"; // Extra spacing after table
-      }
-
-      // Replace the original table with Markdown version
-      markdown = markdown.replace(
-        /<table[^>]*>[\s\S]*?<\/table>/,
-        tableMarkdown
-      );
-    }
-  }
 
   // Remove remaining HTML tags
   markdown = markdown.replace(/<\/?[a-z][a-z0-9]*[^>]*>/gi, "");
@@ -201,5 +144,5 @@ const importQuestions = async (questionCategories) => {
 };
 
 // Import data from another file
-const { questionData } = require("../questions/electrostatics"); // Adjust path
+const { questionData } = require("../questions/motion-in-a-plane"); // Adjust path
 importQuestions(questionData.questions);
